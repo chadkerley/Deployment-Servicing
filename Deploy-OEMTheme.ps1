@@ -1,21 +1,28 @@
-# Define destination path
-$ThemeDestination = "C:\Windows\Resources\Themes"
+# Define destination paths
+$DefaultThemeDestination = "C:\Users\Default\AppData\Local\Microsoft\Windows\Themes"
+$SystemThemeDestination = "C:\Windows\Resources\Themes"
 
-# Ensure the destination directory exists
-if (!(Test-Path $ThemeDestination)) {
-    New-Item -ItemType Directory -Path $ThemeDestination -Force | Out-Null
+# Ensure destination directories exist
+foreach ($Path in $DefaultThemeDestination, $SystemThemeDestination) {
+    if (!(Test-Path $Path)) {
+        New-Item -ItemType Directory -Path $Path -Force | Out-Null
+    }
 }
 
-# Copy all .theme files
-$ThemeFiles = Get-ChildItem -Path "." -Filter "*.theme" -File
-foreach ($ThemeFile in $ThemeFiles) {
-    Copy-Item -Path $ThemeFile.FullName -Destination $ThemeDestination -Force
+# Copy OEM.theme to the Default User's Theme Directory
+$OEMTheme = Get-ChildItem -Path "." -Filter "OEM.theme" -File
+if ($OEMTheme) {
+    Copy-Item -Path $OEMTheme.FullName -Destination $DefaultThemeDestination -Force
 }
 
-# Copy all folders and their contents
+# Copy all other .theme files to the System Theme Directory
+$OtherThemeFiles = Get-ChildItem -Path "." -Filter "*.theme" -File | Where-Object { $_.Name -ne "OEM.theme" }
+foreach ($ThemeFile in $OtherThemeFiles) {
+    Copy-Item -Path $ThemeFile.FullName -Destination $SystemThemeDestination -Force
+}
+
+# Copy all theme folders and their contents to the System Theme Directory
 $ThemeFolders = Get-ChildItem -Path "." -Directory
 foreach ($Folder in $ThemeFolders) {
-    Copy-Item -Path $Folder.FullName -Destination $ThemeDestination -Recurse -Force
+    Copy-Item -Path $Folder.FullName -Destination $SystemThemeDestination -Recurse -Force
 }
-
-Write-Host "All themes and theme folders have been copied successfully."
