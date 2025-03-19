@@ -9,8 +9,10 @@ This repository contains PowerShell scripts and other resources used for Windows
 - **Theme Deployment Script** ([`Deploy-OEMTheme.ps1`](./Deploy-OEMTheme.ps1))
   - Copies a custom `.theme` file and its associated folder to `C:\Windows\Resources\Themes`.
   - Designed to run as a **Run PowerShell Script** step in an **OSD Task Sequence**.
-- **Apply .theme to existing users** 
-- **Additional Deployment Scripts** ([`Deploy-OEMTheme.ps1`](./Deploy-OEMTheme.ps1))
+- **Apply .theme to existing users** ([`Set-ExistingUserTheme.ps1`](./Set-ExistingUserTheme.ps1))
+   - Creates a RunOnce entry for existing user profiles
+   - Applies the theme then closes the system settings window that opens
+- **Additional Deployment Scripts**
   - More scripts will be added to handle various deployment and servicing tasks.
 
 ## Usage
